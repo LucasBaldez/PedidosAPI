@@ -1,0 +1,79 @@
+from sqlalchemy import create_engine, Column, String, Integer, Boolean, Float, ForeignKey
+from sqlalchemy.orm import declarative_base
+
+# cria a conexão do seu banco de dados
+db = create_engine("sqlite:///banco.db")
+
+# cria a base do banco de dados 
+Base = declarative_base()
+
+# criar as classes/tabelas do banco
+
+# Usuario
+class Usuario(Base):
+    __tablename__ = "usuarios"
+
+    id = Column("id", Integer, primary_key=True, autoincrement=True)
+    nome = Column("nome", String)
+    email = Column("email", String, nullable=False)
+    senha = Column("senha", String)
+    ativo = Column("ativo", Boolean)
+    admin = Column("admin", Boolean, default=False) 
+
+    def __init__(self, nome, email, senha, ativo=True, admin=False):
+        self.nome = nome
+        self.email = email
+        self.ativo = ativo
+        self.admin = admin
+
+# Pedido
+class Pedido(Base):
+    __tablename__ = "pedidos"
+
+    # opções para usar no status do pedido
+    # STATUS_PEDIDOS = (
+    #         ("PENDENTE", "PENDENTE"),
+    #         ("CANCELADO", "CANCELADO"),
+    #         ("FINALIZADO", "FINALIZADO")
+    # )
+
+    id = Column("id", Integer, primary_key=True, autoincrement=True)
+    status = Column("status", String)
+    usuario = Column("usuario", ForeignKey("usuarios.id"))
+    preco = Column("preco", Float)
+
+
+    def __init__(self, usuario, status="PENDENTE", preco=0):
+        self.usuario = usuario
+        self.preco = preco
+        self.status = status
+
+        
+# ItensPedido
+
+class ItemPedido(Base):
+    __tablename__ = "itens_pedido"
+
+    id = Column("id", Integer, primary_key=True, autoincrement=True)
+    quantidade = Column("quantidade", String)
+    sabor = Column("sabor", String)
+    tamanho = Column("tamanho", String)
+    preco_unitario = Column("preco_unitario", Float)
+    pedido = Column("pedido", ForeignKey("pedidos.id"))
+
+    def __init__(self, quantidade, sabor, tamanho, preco_unitario, pedido):
+        self.quantidade = quantidade
+        self.sabor = sabor
+        self.tamanho = tamanho 
+        self.preco_unitario = preco_unitario
+        self.pedido = pedido
+# executa a criação dos metadados do seu banco (cria efetivamente o banco de dados)
+
+# 1- instalar a biblioteca (alembic)
+# Obs: importante para fazer as migrações de alterações do banco de dados
+    #pip install alembic
+    # Executar no terminal: alembic init alembic
+# Comando fazer migraçao 
+    # 1 - alembic revision --autogenerate -m "Initial Migration" (cria os scripts DDL) 
+    # 2 - alembic upgrade head (executa os scripts DDL no banco)
+    # Obs: se der erro na migração deleta a versão criada na pasta Alembic/versions e deleta o banco de dados banco.db e roda o comando de migração novamente
