@@ -23,6 +23,7 @@ class Usuario(Base):
     def __init__(self, nome, email, senha, ativo=True, admin=False):
         self.nome = nome
         self.email = email
+        self.senha = senha
         self.ativo = ativo
         self.admin = admin
 
