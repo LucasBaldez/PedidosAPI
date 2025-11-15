@@ -18,6 +18,7 @@ def pegar_sessao():
 
 def verificar_token(token: str = Depends(oauth2_schema), session: Session = Depends(pegar_sessao)):
     #verificar se o token é valido
+    print("TOKEN RECEIVED:", token) 
     try:        
         dic_info = jwt.decode(token, SECRET_KEY, ALGORITHM)
         id_usuario = int(dic_info.get("sub"))

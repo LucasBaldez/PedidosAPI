@@ -18,7 +18,7 @@ bcrypt_context = CryptContext(
     deprecated="auto"
 )
 
-oauth2_schema = OAuth2PasswordBearer(tokenUrl="auth/login-form")
+oauth2_schema = OAuth2PasswordBearer(tokenUrl="/auth/login-form")
 
 from auth_roters import auth_router
 from order_routers import order_router

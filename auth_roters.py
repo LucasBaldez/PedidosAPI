@@ -68,7 +68,7 @@ async def login(login_schema: LoginSchema, session: Session = Depends(pegar_sess
 
 @auth_router.post("/login-form")
 async def login_form(dados_formulario: OAuth2PasswordRequestForm = Depends(), session: Session = Depends(pegar_sessao)):
-    
+    print(dados_formulario)
     usuario = autenticar_usuario(dados_formulario.username, dados_formulario.password, session)
 
     if not usuario:
